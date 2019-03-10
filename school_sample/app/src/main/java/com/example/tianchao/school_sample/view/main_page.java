@@ -1,4 +1,4 @@
-package com.example.tianchao.school_sample;
+package com.example.tianchao.school_sample.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,9 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
-import com.baidu.mapapi.SDKInitializer;
+import com.example.tianchao.school_sample.R;
+import com.example.tianchao.school_sample.fragment.fragmentfour;
+import com.example.tianchao.school_sample.fragment.fragmentone;
+import com.example.tianchao.school_sample.fragment.fragmentthree;
+import com.example.tianchao.school_sample.fragment.fragmenttwo;
 
 import java.util.ArrayList;
 

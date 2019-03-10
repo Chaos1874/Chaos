@@ -1,9 +1,11 @@
-package com.example.tianchao.school_sample;
+package com.example.tianchao.school_sample.view;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.example.tianchao.school_sample.R;
 
 public class sign_page extends AppCompatActivity {
 

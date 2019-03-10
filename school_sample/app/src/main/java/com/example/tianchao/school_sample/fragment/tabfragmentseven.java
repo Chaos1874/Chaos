@@ -1,4 +1,4 @@
-package com.example.tianchao.school_sample;
+package com.example.tianchao.school_sample.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class tabfragmenttwo extends Fragment {
+import com.example.tianchao.school_sample.R;
+
+public class tabfragmentseven extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tabfragmenttwo, null);
+        View view = inflater.inflate(R.layout.tabfragmentseven, null);
         return view;
     }
 }

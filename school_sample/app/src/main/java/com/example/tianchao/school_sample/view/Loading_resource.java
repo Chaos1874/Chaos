@@ -1,19 +1,26 @@
-package com.example.tianchao.school_sample;
+package com.example.tianchao.school_sample.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.tianchao.school_sample.Tools.ACache;
+import com.example.tianchao.school_sample.Tools.HttpConnettionUtils;
+import com.example.tianchao.school_sample.R;
+import com.example.tianchao.school_sample.Tools.ImageDownLoader;
+import com.example.tianchao.school_sample.Tools.StreamString;
+import com.example.tianchao.school_sample.Tools.initjson;
+import com.example.tianchao.school_sample.jsonObject.NewsObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -68,10 +75,10 @@ public class Loading_resource extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), (String) msg.obj, Toast.LENGTH_LONG).show();
                     }
                     else{
-                        System.out.println("hbhjbk"+msg.what);
                         aCache = ACache.get(getApplicationContext());
                         try {
                             aCache.put("course",new JSONArray((String) msg.obj));
+                            System.out.println("course ok");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -144,7 +151,6 @@ public class Loading_resource extends AppCompatActivity {
         }
 
         if(!preferences.getBoolean("auto_login",false)) {
-
             Intent intent = new Intent(Loading_resource.this, login_page.class);
             startActivity(intent);
             Loading_resource.this.finish();
@@ -165,7 +171,7 @@ public class Loading_resource extends AppCompatActivity {
                     //封装成传输数据的键值对,无论get还是post,传输中文时都要进行url编码（RULEncoder）
                     // 如果是在浏览器端的话，它会自动进行帮我们转码，不用我们进行手动设置
                     String data= "information="+ URLEncoder.encode(getSharedPreferences("preferences", MODE_PRIVATE).getString("account","null"),"utf-8");
-                    connection=HttpConnettionUtils.getConnection(data,"sendUsers");
+                    connection= HttpConnettionUtils.getConnection(data,"sendUsers");
                     int code = connection.getResponseCode();
                     if(code==200){//成功
                         InputStream inputStream = connection.getInputStream();
@@ -204,14 +210,11 @@ public class Loading_resource extends AppCompatActivity {
                     connection=HttpConnettionUtils.getConnection(data,"sendCourse");
                     int code = connection.getResponseCode();
                     if(code==200){//成功
-                        System.out.println(1);
                         InputStream inputStream = connection.getInputStream();
-                        System.out.println(2);
                         String str = StreamString.Stream2String(inputStream);//写个工具类流转换成字符串
                         Message message = Message.obtain();//更新UI就要向消息机制发送消息
                         message.what=LOGINSUCCESS;//用来标志是哪个消息
                         message.obj=str;//消息主体
-                        System.out.println(str);
                         courseHandler.sendMessage(message);
                     }
                     else {

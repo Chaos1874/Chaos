@@ -1,4 +1,4 @@
-package com.example.tianchao.school_sample;
+package com.example.tianchao.school_sample.Tools;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,5 +32,15 @@ public class StreamString {
             e.printStackTrace();
         }
         return bitmap;
+    }
+    public static byte[] InputStreamToByte(InputStream is) throws IOException {
+        ByteArrayOutputStream bytestream = new ByteArrayOutputStream();
+        int ch;
+        while ((ch = is.read()) != -1) {
+            bytestream.write(ch);
+        }
+        byte imgdata[] = bytestream.toByteArray();
+        bytestream.close();
+        return imgdata;
     }
 }

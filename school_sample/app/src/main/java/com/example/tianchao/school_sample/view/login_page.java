@@ -1,4 +1,4 @@
-package com.example.tianchao.school_sample;
+package com.example.tianchao.school_sample.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +13,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.tianchao.school_sample.Tools.HttpConnettionUtils;
+import com.example.tianchao.school_sample.R;
+import com.example.tianchao.school_sample.Tools.StreamString;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -95,7 +99,7 @@ public class login_page extends AppCompatActivity {
                         //封装成传输数据的键值对,无论get还是post,传输中文时都要进行url编码（RULEncoder）
                         // 如果是在浏览器端的话，它会自动进行帮我们转码，不用我们进行手动设置
                         String data= "account="+ URLEncoder.encode(account_string,"utf-8")+"&password="+ URLEncoder.encode(password_string,"utf-8");
-                        connection=HttpConnettionUtils.getConnection(data,"Login");
+                        connection= HttpConnettionUtils.getConnection(data,"Login");
                         int code = connection.getResponseCode();
                         if(code==200){//成功
                             InputStream inputStream = connection.getInputStream();

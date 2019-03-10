@@ -1,4 +1,4 @@
-package com.example.tianchao.school_sample;
+package com.example.tianchao.school_sample.fragment;
 
 import android.Manifest;
 import android.content.Context;
@@ -37,6 +37,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.example.tianchao.school_sample.R;
 
 public class tabfragmenteight extends Fragment {
     private View view;

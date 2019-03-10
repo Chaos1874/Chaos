@@ -1,4 +1,4 @@
-package com.example.tianchao.school_sample;
+package com.example.tianchao.school_sample.Tools;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

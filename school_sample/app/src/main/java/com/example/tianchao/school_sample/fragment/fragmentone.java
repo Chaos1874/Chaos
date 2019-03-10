@@ -1,4 +1,4 @@
-package com.example.tianchao.school_sample;
+package com.example.tianchao.school_sample.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,35 +24,35 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.tianchao.school_sample.Tools.ACache;
+import com.example.tianchao.school_sample.Tools.HttpConnettionUtils;
+import com.example.tianchao.school_sample.R;
+import com.example.tianchao.school_sample.Tools.ImageDownLoader;
+import com.example.tianchao.school_sample.Tools.ViewpagerAdapter;
+import com.example.tianchao.school_sample.Tools.initjson;
+import com.example.tianchao.school_sample.jsonObject.NewsObject;
+import com.example.tianchao.school_sample.view.newscontext;
 
-import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class fragmentone extends Fragment {
 
-    private final int LOGINSUCCESS=0;
-    private final int LOGINNOTFOUND=1;
-    private final int LOGINEXCEPT=2;
 
     public View view;
+
+    private ImageDownLoader imageDownLoader;
+    private initjson initjson;
 
     private ListView listView;
     private SimpleAdapter simpleAdapter;
     private ArrayList arrayList = new ArrayList();
-    private  String[] tittle;
     // 在values文件假下创建了pic.xml文件，并定义了4张轮播图对应的id，用于点击事件
     private int[] image_ids = new int[]{R.id.pager_image1, R.id.pager_image2, R.id.pager_image3, R.id.pager_image4};
-    private  String[] picString;
-    private Bitmap[] picture;
-    private  String[] description;
-    private  String[] link;
+
+    private NewsObject newsObjects = new NewsObject();
 
     private ViewPager viewPager;
     private TextView descrip;//标题
@@ -61,25 +61,6 @@ public class fragmentone extends Fragment {
     private List<View> Dots;//小点
     private boolean isStop = false;//线程是否停止
     private static int PAGER_TIOME = 5000;//间隔时间
-
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            if(msg.what==picture.length){
-
-                /*news加载完后开始显示*/
-                /*lisView加载*/
-                initListmap();
-                addAdapter();
-
-                /*pagerView加载*/
-                initPagerViewData();//初始化数据
-                initPagerView();//初始化View，设置适配器
-                autoPlayView();//开启线程，自动播放
-
-            }
-        }
-    };
 
     @Nullable
     @Override
@@ -93,70 +74,45 @@ public class fragmentone extends Fragment {
         viewPager = view.findViewById(R.id.viewpager_fragmentone);
         descrip = view.findViewById(R.id.descrip_fragentone);
 
-        Toast.makeText(view.getContext(), "fdas", Toast.LENGTH_LONG).show();
+        initjson = new initjson(view);
+        imageDownLoader = new ImageDownLoader(view.getContext());
 
         /*服务器获得数据*/
         //requestNews();
-        initJason();
+        try {
+            initJason();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
+
+        /*news加载完后开始显示*/
+        /*lisView加载*/
+        initListmap();
+        addAdapter();
+
+        /*pagerView加载*/
+        initPagerViewData();//初始化数据
+        initPagerView();//初始化View，设置适配器
+        autoPlayView();//开启线程，自动播放
 
         return view;
     }
 
 
-    private void initJason(){
-        try {
-           JSONArray jsonArray = ACache.get(getActivity().getApplicationContext()).getAsJSONArray("news");
-            tittle = new String[jsonArray.length()];
-            description = new String[jsonArray.length()];
-            picString = new String[jsonArray.length()];
-            picture = new Bitmap[jsonArray.length()];
-            link = new String[jsonArray.length()];
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                tittle[i] =  jsonObject.get("tittle").toString();
-                picString[i] =CONSTANT.HOST+ jsonObject.get("picture").toString();
-                description[i] = jsonObject.get("description").toString();
-                link[i] = jsonObject.get("link").toString();
-            }
+    private void initJason() throws InterruptedException {
+        newsObjects = initjson.initNewsJson(ACache.get(getActivity().getApplicationContext()).getAsJSONArray("news"));
 
-            initpic();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    private void initpic() {
-        for (int i = 0; i < picString.length; i++) {
-            new picThread(i).start();
-        }
-    }
-
-    private class picThread extends Thread{
-        private  HttpURLConnection connection;
-        private int num;
-        public  picThread(int num){
-            this.num = num;
-        }
-        @Override
-        public void run() {
-            try {
-                connection = HttpConnettionUtils.getpicConnection(picString[num]);
-                picture[num] = BitmapFactory.decodeStream(connection.getInputStream());
-                Message message = Message.obtain();//更新UI就要向消息机制发送消息
-                message.what=num+1;//用来标志是哪个消息
-                handler.sendMessage(message);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void initListmap(){
-        for(int i=0;i<tittle.length;i++){
+        //System.out.println(newsObjects.getPicture().size()+"qqqq");
+        //System.out.println(newsObjects.getTittle().length+"cccc");
+        for(int i=0;i<newsObjects.getTittle().length;i++){
             HashMap hashMap = new HashMap();
-            hashMap.put("tittle_news",tittle[i]);
-            hashMap.put("description_news",description[i]);
-            hashMap.put("image_news",picture[i]);
+            hashMap.put("tittle_news",newsObjects.getTittle()[i]);
+            hashMap.put("description_news",newsObjects.getDescription()[i]);
+            hashMap.put("image_news",(Bitmap)newsObjects.getPicture().get(i));
             arrayList.add(hashMap);
         }
     }
@@ -184,7 +140,7 @@ public class fragmentone extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(view.getContext(), link[position], Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), newsObjects.getLink()[position], Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -198,7 +154,7 @@ public class fragmentone extends Fragment {
         ImageView iv;
         for (int i = 0; i < image_ids.length; i++) {
             iv = new ImageView(view.getContext());
-            iv.setImageBitmap(picture[i]);//设置图片
+            iv.setImageBitmap((Bitmap)newsObjects.getPicture().get(i));//设置图片
             iv.setId(image_ids[i]);//顺便给图片设置id
             iv.setOnClickListener(new pagerImageOnclick());//设置图片点击事件
             ImageList.add(iv);
@@ -225,7 +181,7 @@ public class fragmentone extends Fragment {
                 //伪无限循环，滑到最后一张图片又从新进入第一张图片
                 int newPosition = (int) (position % ImageList.size());
                 // 把当前选中的点给切换了, 还有描述信息也切换
-                descrip.setText(tittle[newPosition]);//图片下面设置显示文本
+                descrip.setText(newsObjects.getTittle()[newPosition]);//图片下面设置显示文本
                 //设置轮播点
                 LinearLayout.LayoutParams newDotParams = (LinearLayout.LayoutParams) Dots.get(newPosition).getLayoutParams();
                 newDotParams.width = 24;
@@ -298,7 +254,7 @@ public class fragmentone extends Fragment {
      * 第四步：设置刚打开app时显示的图片和文字
      */
     private void setFirstLocation() {
-        descrip.setText(tittle[previousPosition]);
+        descrip.setText(newsObjects.getTittle()[previousPosition]);
         //把ViewPager设置为默认选中Integer.MAX_VALUE / 2，从十几亿次开始轮播图片，达到无限循环目的;
        int m = (int) (( Integer.MAX_VALUE / 2.0) % ImageList.size());
         int currentPosition = (int) (Integer.MAX_VALUE / 2.0 - m);

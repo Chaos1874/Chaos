@@ -1,4 +1,4 @@
-package com.example.tianchao.school_sample;
+package com.example.tianchao.school_sample.Tools;
 
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;

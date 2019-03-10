@@ -1,9 +1,9 @@
-package com.example.tianchao.school_sample;
+package com.example.tianchao.school_sample.Tools;
 
-import java.io.IOException;
+import com.example.tianchao.school_sample.Tools.CONSTANT;
+
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class HttpConnettionUtils {//传输信息类（以流的形式传输）
@@ -22,6 +22,7 @@ public class HttpConnettionUtils {//传输信息类（以流的形式传输）
         //判断服务端返回的响应码，这里是http协议的内容
         return connection;
     }
+
     public static HttpURLConnection getpicConnection(String str) throws Exception {
         URL url = new URL(str);
         HttpURLConnection connection  = (HttpURLConnection)url.openConnection();

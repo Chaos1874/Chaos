@@ -1,4 +1,4 @@
-package com.example.tianchao.school_sample;
+package com.example.tianchao.school_sample.view;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
@@ -17,6 +17,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.example.tianchao.school_sample.R;
 
 public class newscontext extends AppCompatActivity {
     private WebView webView;

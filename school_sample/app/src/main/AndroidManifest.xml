@@ -44,17 +44,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Loading_resource">
+        <activity android:name=".view.Loading_resource">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login_page" />
-        <activity android:name=".main_page" />
-        <activity android:name=".sign_page" />
-        <activity android:name=".newscontext" />
+        <activity android:name=".view.login_page" />
+        <activity android:name=".view.main_page" />
+        <activity android:name=".view.sign_page" />
+        <activity android:name=".view.newscontext" />
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
