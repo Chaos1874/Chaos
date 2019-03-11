@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 public class initjson {
@@ -61,7 +62,12 @@ public class initjson {
                 m++;
             }
         }
-        ArrayList<Bitmap> arrayList = imageDownLoader.startPool();
+        ArrayList<Bitmap> arrayList = null;
+        try {
+            arrayList = imageDownLoader.startPool();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         m=0;
         for(Bitmap b:arrayList){
             picture.add(Nullnumber[m],b);
@@ -90,6 +96,7 @@ public class initjson {
             String[] picString = new String[jsonArray.length()];
             String[] time = new String[jsonArray.length()];
             String[] place = new String[jsonArray.length()];
+            String[] teacher_name = new String[jsonArray.length()];
             ArrayList<Bitmap> picture = new ArrayList<Bitmap>(jsonArray.length());
             try {
                 int k = 0;
@@ -101,6 +108,7 @@ public class initjson {
                         num[k] = jsonObject.get("num").toString();
                         teacher[k] = jsonObject.get("teacher").toString();
                         information[k] = jsonObject.get("information").toString();
+                        teacher_name[k] = jsonObject.get("teacher_name").toString();
                         k++;
                     }
                 }
@@ -114,18 +122,21 @@ public class initjson {
             for (int i = 0; i < picString.length; i++) {
                 Bitmap bitmap = imageDownLoader.getBitmapCache(picString[i]);//先从内存和缓存中查找图片
                 if (bitmap != null) {
-                    System.out.println("1");
                     picture.add(i,bitmap);
                 }
                 else {
-                    System.out.println("2");
                     Nullnumber[m] = i;
                     imageDownLoader.loadImage(picString[i],
                             300,400);
                     m++;
                 }
             }
-            ArrayList<Bitmap> arrayList = imageDownLoader.startPool();
+            ArrayList<Bitmap> arrayList = null;
+            try {
+                arrayList = imageDownLoader.startPool();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
             m=0;
             for(Bitmap b:arrayList){
                 picture.add(Nullnumber[m],b);
@@ -139,6 +150,7 @@ public class initjson {
             courseObject.setPicString(picString);
             courseObject.setTime(time);
             courseObject.setPlace(place);
+            courseObject.setTeacher_name(teacher_name);
             return courseObject;
         }
     }

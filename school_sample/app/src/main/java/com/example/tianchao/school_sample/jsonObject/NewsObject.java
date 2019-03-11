@@ -2,9 +2,10 @@ package com.example.tianchao.school_sample.jsonObject;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class NewsObject {
+public class NewsObject implements Serializable {
     private  String[] tittle;
     private  String[] picString;
     private  String[] description;

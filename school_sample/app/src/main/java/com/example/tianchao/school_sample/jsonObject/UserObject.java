@@ -1,4 +1,6 @@
 package com.example.tianchao.school_sample.jsonObject;
 
-public class UserObject {
+import java.io.Serializable;
+
+public class UserObject implements Serializable {
 }

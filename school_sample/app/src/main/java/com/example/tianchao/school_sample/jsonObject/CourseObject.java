@@ -2,9 +2,10 @@ package com.example.tianchao.school_sample.jsonObject;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CourseObject {
+public class CourseObject implements Serializable {
     private  String[] name;
     private  String[] num;
     private  String[] teacher;
@@ -12,10 +13,19 @@ public class CourseObject {
     private  String[] time ;
     private  String[] place;
     private  String[] picString;
+    private  String[] teacher_name;
     private ArrayList<Bitmap> picture;
 
     public void setName(String[] name) {
         this.name = name;
+    }
+
+    public String[] getTeacher_name() {
+        return teacher_name;
+    }
+
+    public void setTeacher_name(String[] teacher_name) {
+        this.teacher_name = teacher_name;
     }
 
     public void setNum(String[] num) {

@@ -58,7 +58,6 @@ public class ImageDownLoader {
         taskCollection = new Hashtable<String, Integer>();
         // 创建线程数
         threadPool = Executors.newFixedThreadPool(10);
-        System.out.println(context);
         cacheFileDir = FileUtils.createFileDir(context, DIR_CACHE);
     }
 
@@ -75,12 +74,24 @@ public class ImageDownLoader {
     }
 
 
-    public ArrayList<Bitmap>  startPool(){//线程开始运行
-        try {
+    public ArrayList<Bitmap>  startPool() throws ExecutionException, InterruptedException {//线程开始运行
+        List<Future<Bitmap>> tasks = new ArrayList<Future<Bitmap>>();
+        for(int i=0;i<callers.size();i++){
+            Future<Bitmap> task = threadPool.submit(callers.get(i));
+            tasks.add(task);
+        }
+        ArrayList<Bitmap> result = new ArrayList<Bitmap>();
+        for (Future<Bitmap> future : tasks) {
+            result.add(future.get());
+        }
+        return result;
+
+        /*try {
            List<Future<Bitmap>> task = threadPool.invokeAll(callers);//执行线程并执行join方法
             ArrayList<Bitmap> result = new ArrayList<Bitmap>();
             for (Future<Bitmap> future : task) {
                 result.add(future.get());
+                System.out.println(future.get());
             }
             return result;
         } catch (InterruptedException e) {
@@ -88,18 +99,17 @@ public class ImageDownLoader {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return null;
+        return null;*/
     }
 
     /**     * 异步下载图片，并按指定宽度和高度压缩图片     *      * @param url     * @param width     * @param height     * @param listener     *            图片下载完成后调用接口     */
     public void loadImage(final String url, final int width,final int height
                           ) throws InterruptedException {
 
-            System.out.println(url+"f");
             Callable<Bitmap> callable = new Callable<Bitmap>() {
             @Override
             public Bitmap call() throws Exception {
-                System.out.println(url+"t");
+                System.out.println(url);
                 bitmap = downloadImage(url, width, height);
                 // 将Bitmap 加入内存缓存
                 addBitmapToMemCache(url, bitmap);
