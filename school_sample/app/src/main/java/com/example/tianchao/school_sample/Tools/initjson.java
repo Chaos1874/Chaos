@@ -83,10 +83,80 @@ public class initjson {
     }
 
 
-        public UserObject initUserJson (JSONArray jsonArray){
+        public UserObject initUserJson (JSONArray jsonArray) throws InterruptedException {
             UserObject userObject = new UserObject();
+
+            String[] name = new String[jsonArray.length()];
+            String[] id_school = new String[jsonArray.length()];
+            String[] id_card = new String[jsonArray.length()];
+            String[] phone = new String[jsonArray.length()];
+            String[] type = new String[jsonArray.length()];
+            String[] username = new String[jsonArray.length()];
+            String[] password = new String[jsonArray.length()];
+            String[] is_signed = new String[jsonArray.length()];
+            String[] class_num = new String[jsonArray.length()];
+            String[] icon = new String[jsonArray.length()];
+            ArrayList<Bitmap> picture = new ArrayList<Bitmap>(jsonArray.length());
+
+            try {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    name[i] = jsonObject.get("name").toString();
+                    id_school[i] = jsonObject.get("id_school").toString();
+                    id_card[i] = jsonObject.get("id_card").toString();
+                    phone[i] = jsonObject.get("phone").toString();
+                    type[i] = jsonObject.get("type").toString();
+                    username[i] = jsonObject.get("username").toString();
+                    password[i] = jsonObject.get("password").toString();
+                    is_signed[i] = jsonObject.get("is_signed").toString();
+                    class_num[i] = jsonObject.get("class_num").toString();
+                    icon[i] =  CONSTANT.HOST + jsonObject.get("icon").toString();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            //加载图片
+            int[] Nullnumber = new int[50];
+            int m =0;
+            for (int i = 0; i < icon.length; i++) {
+                    Bitmap bitmap = imageDownLoader.getBitmapCache(icon[i]);//先从内存和缓存中查找图片
+                    if (bitmap != null) {
+                        picture.add(i, bitmap);
+                    } else {
+                        Nullnumber[m] = i;
+                        imageDownLoader.loadImage(icon[i],
+                                300, 400);
+                        m++;
+                    }
+            }
+            ArrayList<Bitmap> arrayList = null;
+            try {
+                arrayList = imageDownLoader.startPool();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            m=0;
+            for(Bitmap b:arrayList){
+                picture.add(Nullnumber[m],b);
+                m++;
+            }
+
+            userObject.setClass_num(class_num);
+            userObject.setIcon(icon);
+            userObject.setId_card(id_card);
+            userObject.setId_school(id_school);
+            userObject.setIs_signed(is_signed);
+            userObject.setName(name);
+            userObject.setPassword(password);
+            userObject.setPicture(picture);
+            userObject.setPhone(phone);
+            userObject.setType(type);
+            userObject.setUsername(username);
             return userObject;
         }
+
+
         public CourseObject initCoursejson (JSONArray jsonArray) throws InterruptedException {
             CourseObject courseObject = new CourseObject();
             String[] name = new String[jsonArray.length()];
@@ -142,7 +212,7 @@ public class initjson {
                 picture.add(Nullnumber[m],b);
                 m++;
             }
-            courseObject.setPicture(picture);//开启线程
+            courseObject.setPicture(picture);
             courseObject.setName(name);
             courseObject.setNum(num);
             courseObject.setTeacher(teacher);
